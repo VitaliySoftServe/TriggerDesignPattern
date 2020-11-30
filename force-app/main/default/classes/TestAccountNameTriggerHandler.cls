@@ -11,16 +11,18 @@ public with sharing class TestAccountNameTriggerHandler extends TriggerHandler {
          newMap  = (Map<Id,Account>) Trigger.newMap;  
    } 
 
+   
     public override void  afterInsert () {
         List<TestAccountName__c> testsToInsert = new List<TestAccountName__c>();
         for (Account a : newTrigger){
             TestAccountName__c test = new TestAccountName__c(Name=a.Name);
             test.AccountId__c=a.Id;
             testsToInsert.add(test);   
-            test.DeletedAccountId__c=String.valueOf(a.Id);     
+            //test.DeletedAccountId__c=String.valueOf(a.Id);     
         }
         insert(testsToInsert);
     } 
+
 
     public override void afterUpdate() {
         List<TestAccountName__c> testsToUpdate = new List<TestAccountName__c>();
@@ -40,16 +42,17 @@ public with sharing class TestAccountNameTriggerHandler extends TriggerHandler {
         }
     } 
 
-    public override void  afterDelete () {
+
+    public override void afterDelete () {
         List<TestAccountName__c> testsToChangeStatus = new List<TestAccountName__c>();
-        Set<String> accountIds = new Set<String>();
+        Set<Id> accountIds = new Set<Id>();
         for (Account a : oldTrigger){ 
-        	accountIds.add(String.valueOf(a.Id));
+        	accountIds.add(a.Id);
         }
         for(TestAccountName__c test : [SELECT Status__c FROM TestAccountName__c WHERE DeletedAccountId__c IN :accountIds]){
             test.Status__c='deleted';
             testsToChangeStatus.add(test);
-            test.DeletedAccountId__c=null;
+            //test.DeletedAccountId__c=null;
         }
         update testsToChangeStatus;
     }  

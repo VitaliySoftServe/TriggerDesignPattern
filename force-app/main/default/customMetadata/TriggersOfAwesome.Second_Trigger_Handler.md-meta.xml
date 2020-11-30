@@ -13,6 +13,6 @@
     </values>
     <values>
         <field>sObjectType__c</field>
-        <value xsi:type="xsd:string">Account</value>
+        <value xsi:type="xsd:string">TestAccountName__c</value>
     </values>
 </CustomMetadata> 
