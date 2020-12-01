@@ -17,8 +17,7 @@ public with sharing class TestAccountNameTriggerHandler extends TriggerHandler {
         for (Account a : newTrigger){
             TestAccountName__c test = new TestAccountName__c(Name=a.Name);
             test.AccountId__c=a.Id;
-            testsToInsert.add(test);   
-            //test.DeletedAccountId__c=String.valueOf(a.Id);     
+            testsToInsert.add(test);       
         }
         insert(testsToInsert);
     } 
@@ -52,7 +51,6 @@ public with sharing class TestAccountNameTriggerHandler extends TriggerHandler {
         for(TestAccountName__c test : [SELECT Status__c FROM TestAccountName__c WHERE DeletedAccountId__c IN :accountIds]){
             test.Status__c='deleted';
             testsToChangeStatus.add(test);
-            //test.DeletedAccountId__c=null;
         }
         update testsToChangeStatus;
     }  
