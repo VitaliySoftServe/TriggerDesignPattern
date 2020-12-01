@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>50.0</apiVersion>
+    <interviewLabel>CreateDeletedAccountIdInTestAccountNameHistoryFlow {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>CreateDeletedAccountIdInTestAccountNameHistoryFlow</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordCreates>
+        <name>CreateTestAccountNameHistory</name>
+        <label>CreateTestAccountNameHistory</label>
+        <locationX>176</locationX>
+        <locationY>253</locationY>
+        <inputAssignments>
+            <field>Description__c</field>
+            <value>
+                <stringValue>TestAccountName Object with Id &apos;{!$Record.Id}&apos; and name &apos;{!$Record.Name}&apos; was deleted</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Name</field>
+            <value>
+                <stringValue>{!$Record.Name} History</stringValue>
+            </value>
+        </inputAssignments>
+        <object>TestAccountNameHistory__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordCreates>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>CreateTestAccountNameHistory</targetReference>
+        </connector>
+        <object>TestAccountName__c</object>
+        <recordTriggerType>Delete</recordTriggerType>
+        <triggerType>RecordBeforeDelete</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>
