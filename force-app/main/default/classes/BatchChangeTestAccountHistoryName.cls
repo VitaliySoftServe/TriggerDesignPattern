@@ -1,26 +1,24 @@
 public class BatchChangeTestAccountHistoryName implements Database.Batchable<sObject> {
-    List<Id> TestAccountNameIds;
+    Set<Id> TestAccountNameIds;
     
-    public BatchChangeTestAccountHistoryName (List<Id> TestAccountNameIds){
+    public BatchChangeTestAccountHistoryName (Set<Id> TestAccountNameIds){
         this.TestAccountNameIds=TestAccountNameIds;
     }
 
-    
-    public Database.QueryLocator start(Database.BatchableContext bc) {
-        String query = 'SELECT Name, (SELECT Name FROM TestAccountNameHistories__r) FROM TestAccountName__c WHERE Id in:' + TestAccountNameIds;
-        return Database.getQueryLocator(query);
+    public List<TestAccountNameHistory__c>  start(Database.BatchableContext bc) {
+        return [SELECT Name, TestAccountNameId__r.Name FROM TestAccountNameHistory__c WHERE TestAccountNameId__c in :TestAccountNameIds];
     }
 
 
-    public void execute(Database.BatchableContext bc, List<TestAccountName__c> scope){
+    public void execute(Database.BatchableContext bc, List<TestAccountNameHistory__c> scope){
         List<TestAccountNameHistory__c> historiesToUpdate = new List<TestAccountNameHistory__c>();
-            for(TestAccountName__c test : scope){
-                for (TestAccountNameHistory__c history : test.TestAccountNameHistories__r) {
-                    history.Name=test.Name+' History';
-                    historiesToUpdate.add(history);
-                }
+        for (TestAccountNameHistory__c history : scope) {
+            if (history.Name!=history.TestAccountNameId__r.Name+' History') {
+                history.Name=history.TestAccountNameId__r.Name+' History';
+                historiesToUpdate.add(history);
             }
-        update historiesToUpdate; 
+        }       
+        update historiesToUpdate;  
     }
 
 
