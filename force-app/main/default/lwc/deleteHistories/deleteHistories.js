@@ -8,10 +8,14 @@ export default class DeleteHistories extends LightningElement {
 
     handleClick() {
         if (confirm('Warning! Are you sure you want to delete all the related History records?')){
-            deleteAll( {testId:this.recordId} ).then( result => {
+            deleteAll( {testId:this.recordId} )
+            .then( result => {
                 this.clickedButtonLabel=result;
                 alert(result); 
-            }); 
+            })
+            .catch(error => {
+                alert('An error occured: '+error);
+            });; 
         } 
     }
 }
