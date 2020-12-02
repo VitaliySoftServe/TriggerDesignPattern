@@ -5,7 +5,7 @@ public class BatchChangeTestAccountHistoryName implements Database.Batchable<sOb
         this.TestAccountNameIds=TestAccountNameIds;
     }
 
-    public List<TestAccountNameHistory__c>  start(Database.BatchableContext bc) {
+    public List<TestAccountNameHistory__c> start(Database.BatchableContext bc) {
         return [SELECT Name, TestAccountNameId__r.Name FROM TestAccountNameHistory__c WHERE TestAccountNameId__c in :TestAccountNameIds];
     }
 

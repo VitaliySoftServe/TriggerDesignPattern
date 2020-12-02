@@ -27,7 +27,7 @@ public with sharing class TestAccountNameHistoryTriggerHandler extends TriggerHa
     Set <Id> ids = new Set<Id>();
 
     for (TestAccountName__c test : newTrigger){ 
-
+        
         TestAccountNameHistory__c history = new TestAccountNameHistory__c(Name=test.Name+' History');
         history.Description__c='TestAccountName Object with Id \''+test.Id+'\' and name \''+test.Name+'\' was changed. Status is \''+test.Status__c+'\'';  
         history.TestAccountNameId__c=test.Id;  
