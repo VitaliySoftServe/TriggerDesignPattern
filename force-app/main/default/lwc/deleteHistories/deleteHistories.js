@@ -1,4 +1,4 @@
-import { LightningElement, api, track} from 'lwc';
+import { LightningElement, api} from 'lwc';
 import deleteAll from '@salesforce/apex/DeleteHistories.deleteAll';
 
 export default class DeleteHistories extends LightningElement {
@@ -14,7 +14,7 @@ export default class DeleteHistories extends LightningElement {
                 alert(result); 
             })
             .catch(error => {
-                alert('An error occured: '+error);
+                alert('An error occured! Code: ' + error.errorCode + ' ' + ', Message: ' + error.body.message);
             });; 
         } 
     }
