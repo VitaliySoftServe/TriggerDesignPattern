@@ -1,4 +1,4 @@
-public class BatchDeleteHistories implements Database.Batchable<sObject>{
+public class BatchDeleteHistories implements Database.Batchable<sObject> {
     
     Id i;
     
@@ -16,5 +16,5 @@ public class BatchDeleteHistories implements Database.Batchable<sObject>{
     }
 
 
-    public void finish(Database.BatchableContext bc){}
+    public void finish(Database.BatchableContext bc) {}
 }
