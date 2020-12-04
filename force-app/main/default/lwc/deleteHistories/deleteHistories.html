@@ -1,7 +1,8 @@
 <template>
     <lightning-card title="Delete all the related Histories" icon-name="action:delete">
-        
-        <lightning-button variant="destructive" label="Delete" title="Delete all related History records" onclick={handleClick} class="slds-m-left_x-small">
+
+        <lightning-button variant="destructive" label="Delete" title="Delete all related History records"
+            onclick={handleClick} class="slds-m-left_x-small">
         </lightning-button>
 
         <template if:true={clickedButtonLabel}>
@@ -11,6 +12,6 @@
         </template>
 
         <template if:false={clickedButtonLabel}></template>
-        
+
     </lightning-card>
 </template>

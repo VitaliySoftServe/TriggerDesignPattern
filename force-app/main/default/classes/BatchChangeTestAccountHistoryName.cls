@@ -1,7 +1,7 @@
 public class BatchChangeTestAccountHistoryName implements Database.Batchable<sObject> {
     Set<Id> TestAccountNameIds;
     
-    public BatchChangeTestAccountHistoryName (Set<Id> TestAccountNameIds){
+    public BatchChangeTestAccountHistoryName (Set<Id> TestAccountNameIds) {
         this.TestAccountNameIds=TestAccountNameIds;
     }
 
@@ -10,7 +10,7 @@ public class BatchChangeTestAccountHistoryName implements Database.Batchable<sOb
     }
 
 
-    public void execute(Database.BatchableContext bc, List<TestAccountNameHistory__c> scope){
+    public void execute(Database.BatchableContext bc, List<TestAccountNameHistory__c> scope) {
         List<TestAccountNameHistory__c> historiesToUpdate = new List<TestAccountNameHistory__c>();
         for (TestAccountNameHistory__c history : scope) {
             if (history.Name!=history.TestAccountNameId__r.Name+' History') {
@@ -22,5 +22,5 @@ public class BatchChangeTestAccountHistoryName implements Database.Batchable<sOb
     }
 
 
-    public void finish(Database.BatchableContext bc){}
+    public void finish(Database.BatchableContext bc) {}
 }

@@ -1,4 +1,4 @@
-public class BatchDeleteHistories implements Database.Batchable<sObject>{
+public class BatchDeleteHistories implements Database.Batchable<sObject> {
     
     Id i;
     
@@ -11,10 +11,10 @@ public class BatchDeleteHistories implements Database.Batchable<sObject>{
     }
 
 
-    public void execute(Database.BatchableContext bc, List<TestAccountNameHistory__c> scope){
+    public void execute(Database.BatchableContext bc, List<TestAccountNameHistory__c> scope) {
         delete scope;  
     }
 
 
-    public void finish(Database.BatchableContext bc){}
+    public void finish(Database.BatchableContext bc) {}
 }
