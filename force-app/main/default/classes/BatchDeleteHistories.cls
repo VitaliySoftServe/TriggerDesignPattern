@@ -11,7 +11,7 @@ public class BatchDeleteHistories implements Database.Batchable<sObject> {
     }
 
 
-    public void execute(Database.BatchableContext bc, List<TestAccountNameHistory__c> scope){
+    public void execute(Database.BatchableContext bc, List<TestAccountNameHistory__c> scope) {
         delete scope;  
     }
 
