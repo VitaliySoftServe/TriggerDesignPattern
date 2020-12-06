@@ -21,5 +21,5 @@ public class BatchChangeTestAccountHistoryName implements Database.Batchable<sOb
            update historiesToUpdate;
     }
 
-    public void finish(Database.BatchableContext bc) {}Hello World
+    public void finish(Database.BatchableContext bc) {}
 }
