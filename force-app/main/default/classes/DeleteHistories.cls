@@ -4,7 +4,7 @@ public with sharing class DeleteHistories {
         Id i = Id.valueOf(testId);
         BatchDeleteHistories myBatchObject = new BatchDeleteHistories(i);
         ID jobID  = Database.executeBatch(myBatchObject);
-
+        
         AsyncApexJob jobInfo  = [ SELECT NumberOfErrors FROM AsyncApexJob WHERE ID =: jobID ];
 
         Integer count1 = [SELECT Id FROM TestAccountNameHistory__c WHERE TestAccountNameId__c =:i].size() - jobInfo.NumberOfErrors;
@@ -16,7 +16,7 @@ public with sharing class DeleteHistories {
                 'There were problems with deleting of ' + count2 + ' History records';
         } else {
             s = count2 == 0?count1 + ' related History records were successfully deleted':
-                count1 + ' related History records were successfully deleted; But there were problems with deleting of ' 
+                count1 + ' related History records were successfully deleted; But there were problems with deleting of '
                 + count2 + ' History records';
         }
         return s;
