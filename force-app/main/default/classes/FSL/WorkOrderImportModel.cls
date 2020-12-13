@@ -42,9 +42,7 @@ public with sharing class WorkOrderImportModel {
     public class WorkOrderLineItemExcel {
         @AuraEnabled
         public String FakeId {
-            get;
-
-            set;
+            get; set;
         }
         @AuraEnabled
         public String Category {

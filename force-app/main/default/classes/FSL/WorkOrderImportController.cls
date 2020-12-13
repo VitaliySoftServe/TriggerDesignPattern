@@ -73,14 +73,14 @@ public with sharing class WorkOrderImportController {
         List<Property__c> properties = [SELECT Yardi_Property_ID__c
                                         FROM Property__c
                                         WHERE Yardi_Property_ID__c IN :oldPropertyIdSet];
-        Set<String> propertyYardiIdSet = new Set<String>();
+        Map<String, Id> propertyYardiIdMap = new Map<String, Id>();
         for (Property__c p : properties) {
-            propertyYardiIdSet.add(p.Yardi_Property_ID__c);
+            propertyYardiIdMap.put(p.Yardi_Property_ID__c, p.Id);
         }
-        if (propertyYardiIdSet.size() < oldPropertyIdSet.size()) {
-            for (String p : propertyYardiIdSet) {
-                if (oldPropertyIdSet.contains(p)) {
-                    oldPropertyIdSet.remove(p);
+        if (propertyYardiIdMap.keyset().size() < oldPropertyIdSet.size()) {
+            for (String pId : propertyYardiIdMap.keyset()) {
+                if (oldPropertyIdSet.contains(pId)) {
+                    oldPropertyIdSet.remove(pId);
                 }
             }
             for (WorkOrderImportModel.WorkOrderExcel w : workOrderExcelList) {
@@ -93,10 +93,6 @@ public with sharing class WorkOrderImportController {
                 }
             }
             return null;
-        }
-        Map<String, Id> propertyYardiIdMap = new Map<String, Id>();
-        for (Property__c p : properties) {
-            propertyYardiIdMap.put(p.Yardi_Property_ID__c, p.Id);
         }
         for (WorkOrderImportModel.WorkOrderExcel w : workOrderExcelList) {
             if (propertyYardiIdMap.keyset().contains(w.PropertyId)) {
@@ -118,29 +114,9 @@ public with sharing class WorkOrderImportController {
         List<Contact> contactsWithEmails = [SELECT Email
                                             FROM Contact
                                             WHERE Email IN :excelEmails];
-        Set<String> emails = new Set<String>();
-        for (Contact c : contactsWithEmails) {
-            emails.add(c.Email);
-        }
         List<Contact> contactsWithPhones = [SELECT Phone
                                             FROM Contact
                                             WHERE Phone IN :excelPhones];
-        Set<String> phones = new Set<String>();
-        for (Contact c : contactsWithPhones) {
-            phones.add(c.Phone);
-        }
-        for (WorkOrderImportModel.WorkOrderExcel w : workOrderExcelList) {
-            if (!emails.contains(w.CallerEmail) && !phones.contains(w.CallerPhone)) {
-                ErrorEntity e = new ErrorEntity('1',
-                                                w.FakeId,
-                                                new List<String>
-                                                {'Both Caller Email and Caller Phone are missing  in the DB'});
-                errorsToFrontList.add(e);
-            }
-        }
-        if (checkErrorsToFront(errorsToFrontList)) {
-            return null;
-        }
         Map<String, Id> emailsAndIdMap = new Map<String, Id>();
         for (Contact c : contactsWithEmails) {
             emailsAndIdMap.put(c.Email, c.Id);
@@ -148,6 +124,19 @@ public with sharing class WorkOrderImportController {
         Map<String, Id> phonesAndIdMap = new Map<String, Id>();
         for (Contact p : contactsWithPhones) {
             phonesAndIdMap.put(p.Phone, p.Id);
+        }
+        for (WorkOrderImportModel.WorkOrderExcel wOrder : workOrderExcelList) {
+            if (!emailsAndIdMap.keySet().contains(wOrder.CallerEmail) &&
+                !phonesAndIdMap.keySet().contains(wOrder.CallerPhone)) {
+                ErrorEntity e = new ErrorEntity('1',
+                                                wOrder.FakeId,
+                                                new List<String>
+                                                {'Both Caller Email and Caller Phone are missing  in the DB'});
+                errorsToFrontList.add(e);
+            }
+        }
+        if (checkErrorsToFront(errorsToFrontList)) {
+            return null;
         }
         for (WorkOrderImportModel.WorkOrderExcel wOrder : workOrderExcelList) {
             if (emailsAndIdMap.containskey(wOrder.CallerEmail)) {
@@ -171,16 +160,19 @@ public with sharing class WorkOrderImportController {
     private static List<WorkOrderImportModel.WorkOrderExcel> validateWorkOrders (
         List<WorkOrderImportModel.WorkOrderExcel> workOrderExcelList
         ) {
-        for (WorkOrderImportModel.WorkOrderExcel w : workOrderExcelList) {
+        Set <String> oldPropertyIdSet = new Set<String>();
+        for (WorkOrderImportModel.WorkOrderExcel wOrderExcel : workOrderExcelList) {
             Integer i = 0;
+            oldPropertyIdSet.add(wOrderExcel.PropertyId);
             for (WorkOrderImportModel.WorkOrderExcel wo : workOrderExcelList) {
-                if (w.PropertyId == wo.PropertyId && w.ContactId != wo.ContactId) {
+                if (wOrderExcel.PropertyId == wo.PropertyId &&
+                    wOrderExcel.ContactId != wo.ContactId) {
                     i++;
                 }
             }
             if (i > 0) {
                 ErrorEntity e = new ErrorEntity('1',
-                                                w.FakeId,
+                                                wOrderExcel.FakeId,
                                                 new List<String>
                                                 {'It can not be the same PropetyId but ' +
                                                  'different Contact details (Phone, Email)'});
@@ -192,10 +184,6 @@ public with sharing class WorkOrderImportController {
         }
         List<WorkOrderImportModel.WorkOrderExcel> validatedAndPreparedWorkOrders =
             new List<WorkOrderImportModel.WorkOrderExcel>();
-        Set <String> oldPropertyIdSet = new Set<String>();
-        for (WorkOrderImportModel.WorkOrderExcel w : workOrderExcelList) {
-            oldPropertyIdSet.add(w.PropertyId);
-        }
         for (WorkOrderImportModel.WorkOrderExcel w : workOrderExcelList) {
             if (oldPropertyIdSet.contains(w.PropertyId)) {
                 validatedAndPreparedWorkOrders.add(w);
@@ -369,8 +357,8 @@ public with sharing class WorkOrderImportController {
         List<ServiceAppointment> updatedServiceAppointments = new List<ServiceAppointment>();
         Map <Id, String> workOrderLineItemIdAndFakeIdMap = new Map<Id, String>();
         Integer n = 1;
-        for (Id workOrderId : dbWorkOrderLineItemIds) {
-            workOrderLineItemIdAndFakeIdMap.put(workOrderId, String.valueOf(n++));
+        for (Id i : dbWorkOrderLineItemIds) {
+            workOrderLineItemIdAndFakeIdMap.put(i, String.valueOf(n++));
         }
         List<ServiceAppointment> serviceAppointmentsDbList = [SELECT Id, WorkOrderLineItemId__c
                                                               FROM ServiceAppointment
